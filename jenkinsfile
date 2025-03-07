@@ -68,13 +68,18 @@ pipeline {
             steps {
                 script{
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
-                       sh 'docker-scout quickview techdocker24/zomatot'
+                       sh 'docker-scout quickview techdocker24/zomato'
                        sh 'docker-scout cves techdocker24/zomato'
                        sh 'docker-scout recommendations techdocker24/zomato'
                    }
                 }
             }
         }
+        stage("Container Remove") {
+             steps{
+                 sh "docker rm -f zomato || true"
+             }
+      }
         stage ("Deploy to Container") {
             steps {
                 sh 'docker run -d --name zomato -p 3000:3000 techdocker24/zomato'
